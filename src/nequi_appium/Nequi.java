@@ -16,6 +16,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import io.appium.java_client.android.AndroidDriver;
+import nequi.configuracion.ConfigurationManager;
 
 /**
  * @author   Juan Camilo Arboleda - Programador
@@ -36,8 +37,10 @@ public class Nequi
 	public static int int_Tiempo_Espera = 10;
 	public static String Str_Nombre_Bolsillo = "EditarBolsillo";
 	public static String Str_Nombre2_Bolsillo = "EditarBolsillo2";
-	public static String Str_Nombre_Meta = "MetaAutomatico";
+	public static String Str_Nombre_Meta = "Asd";
 	public static String Str_Numero_Telefono = "3991000025";
+	public static String Str_Numero_celrec = "3991000025";
+	
 	public static String Str_Numero_Amigo = "3006581359";
 	public static String Str_Contrasena = "1397";
 	public static String Str_OTP = "1234";
@@ -56,40 +59,24 @@ public class Nequi
 	}
 	
 	@Test
-	public void Inicio_NEQUI() throws InterruptedException, IOException
+	public void Inicio_NEQUI() throws Exception
 	{
+		String connString = ConfigurationManager.getAppSetting("metodo");
+		System.out.println(connString);
 		System.out.println("******************Inicio de Prueba********************************************");
 		Thread.sleep(10000);
-		funciones.buscaElemento("//*[@resource-id='android:id/button2' and @text='Update']",Obj_Android_Driver);
+		funciones.buscaElementoIngles("//*[@resource-id='android:id/button2' and @text='Update']","//*[@resource-id='android:id/button2' and @text='Actualizar']",Obj_Android_Driver);
 		// ---------------------------- Paseo ---------------
 		Thread.sleep(5000);
-		//flujos.paseo(Obj_Android_Driver);
+		flujos.paseo(Obj_Android_Driver);
+	
 		// ****************** Entrar a la APP *********************
 		flujos.entrarAppCuenta(Obj_Android_Driver,Str_Contrasena,Str_OTP,Str_Numero_Telefono);
-		// ****************** Pedir Vinculado *********************
-		//flujos.pedirVinculado(Obj_Android_Driver,Str_Numero_Amigo);
-		// ****************** Pagar_vinc_Disponible ***************
-		//flujos.pagarVinculado("prueba2",Obj_Android_Driver);  // Imprevistos / Disponible / prueba2
-		// ****************** enviar_vinc_Disponible **************
-		//flujos.enviarVinculado("Meta Vacaciones Tolu",Str_Contrasena,Str_Numero_Amigo,Obj_Android_Driver);		
-		// ****************** Sacar_Disponible ********************
-		//flujos.sacarVinculado("prueba2",Obj_Android_Driver);	// Imprevistos / Disponible / prueba2
-		// ****************** Crud Bolsillo *********************
-		//flujos.creaBolsillo(Obj_Android_Driver,Str_Nombre_Bolsillo);	
-		// ****************** Crud Bolsillo  Parametro (editar,eliminar)*********************
-		flujos.crudBolsillo("editar",Obj_Android_Driver,Str_Nombre_Bolsillo,Str_Nombre2_Bolsillo);
-		// ****************** Crud Metas *********************
-		//flujos.crearMeta(Obj_Android_Driver);
-		// ****************** Crud Meta  Parametro (editar,romper,completar)*********************
-		//flujos.crudMeta("completar",Obj_Android_Driver);
 		
-		
+		selector(connString);
+
 		// ****************** Guardadito *********************
 		//guardadito("Saca");
-		
-		
-		//		Formas de pago:
-		//		BolsilloImprevistos
 	}
 
 	/**
@@ -138,192 +125,38 @@ public class Nequi
 		//setUp();
 	}
 		
-
-	
-	
-	
-	//***************************************    CRUD META    **************************
-	
-	public static void crudMeta(String accion) throws IOException{
-		try {
-			file1 = funciones.esperarCambio(Obj_Android_Driver);
-			Thread.sleep(8000);
-			funciones.buscaElemento("//*[@content-desc='Metas' and @clickable='true']",Obj_Android_Driver);
-			file2 = funciones.esperarCambio(Obj_Android_Driver);
-			funciones.compara(file1,file2,Obj_Android_Driver);
-			System.out.println(" **** Clic en Metas ************** OK");
-			Thread.sleep(3000);
-			
-			// ******* click en + para crear nueva Meta *****
-			file1 = funciones.esperarCambio(Obj_Android_Driver);
-			
-			// ******* click en editar el Bolsillo creado previamente *****					
-			//opSelMeta(Str_Nombre_Meta);
-			funciones.buscaElemento("//*[@content-desc='MetaAutomatico']",Obj_Android_Driver);
-			switch (accion) 
-			{ 			
-					case "editar": editaMeta(); 
-					break;
-					case "completar": completaMeta(); 
-					break; 
-					case "romper": rompeMeta(); 
-					break;
-			}
-		} catch (Exception e) {
-			System.out.println("**** CRUD Meta FAIL *******" + e);
-			funciones.toma_Evidencias(Obj_Android_Driver);
-		}	
-	}
-	
-	public static void crearMeta() throws IOException
-
-	{
-		System.out.println("***** Crear Meta **********");
-		try 
-		{
-			file1 = funciones.esperarCambio(Obj_Android_Driver);
-			Thread.sleep(5000);
-			funciones.buscaElemento("//*[@content-desc='Metas' and @clickable='true']",Obj_Android_Driver);
-			file2 = funciones.esperarCambio(Obj_Android_Driver);
-			funciones.compara(file1,file2,Obj_Android_Driver);
-			System.out.println(" **** Clic en Metas ************** OK");
-			Thread.sleep(3000);
-			
-			// ******* click en + para crear nueva Meta *****
-			file1 = funciones.esperarCambio(Obj_Android_Driver);
-//			buscaElemento("//*[@content-desc='?' and @clickable='true']");
-			
-			List<WebElement> list= Obj_Android_Driver.findElements(By.xpath("//*/android.view.View/android.view.View/android.view.View/android.widget.Button"));
-			int Dbl_X = list.get(1).getLocation().getX();
-			System.out.println(Dbl_X);
-			int Dbl_Y = list.get(1).getLocation().getY();
-			System.out.println(Dbl_Y);
-			Obj_Android_Driver.tap(1, Dbl_X+50, Dbl_Y+50, 100);
-			System.out.println(" **** Tap en + (Nuevo)  ************** OK");
-			file2 = funciones.esperarCambio(Obj_Android_Driver);
-			funciones.compara(file1,file2,Obj_Android_Driver);
-			Thread.sleep(5000);
-
-			// ******* Nombre de la Meta *****
-			
-//			WebElement camp_cel = Obj_Android_Driver.findElementByXPath("//*/android.widget.EditText");
-			int anch_pant = Obj_Android_Driver.manage().window().getSize().getWidth();
-//			int x = camp_cel.getLocation().getX();
-//			int y = camp_cel.getLocation().getY();
-//			Obj_Android_Driver.tap(1, x-anch_pant,y, 0);
-//			System.out.println(" **** Campo Nombre de la Meta ************** OK");
-//			Thread.sleep(500);
-			file1 = funciones.esperarCambio(Obj_Android_Driver);
-			Obj_Android_Driver.findElement(By.xpath("//*/android.widget.EditText")).sendKeys(Str_Nombre_Meta);
-			file2 = funciones.esperarCambio(Obj_Android_Driver);
-			funciones.compara(file1,file2,Obj_Android_Driver);
-			System.out.println(" **** Ingresa el Nombre de la Meta ************** OK");
-			Thread.sleep(2000);
-			
-			// ******* Monto de la Meta *****
-			Obj_Android_Driver.tap(1,anch_pant/2,90, 0);
-			Thread.sleep(2000);
-		
-			Obj_Android_Driver.findElementByXPath("//*[contains(@text,'$ 0') and @clickable='true']").sendKeys("200000");
-			Thread.sleep(2000);
-			System.out.println(" **** Ingresa el Monto de la Meta ************** OK");
-			Obj_Android_Driver.tap(1,anch_pant/2,90, 0);
-			Thread.sleep(2000);
-
-			// ******* diligencia campo Fecha *****
-			Thread.sleep(2000);
-			Obj_Android_Driver.findElementByXPath("//*[contains(@content-desc,'Fecha límite') and @clickable='true']").click();
-			funciones.toma_Evidencias(Obj_Android_Driver);
-			Thread.sleep(2000);
-
-			System.out.println(" **** Encuentra Campo Fechas ************** OK");
-
-			//***************************************** Ingreso de mes *****************************	
-			WebElement mes = Obj_Android_Driver.findElement(By.xpath("//*[@resource-id='android:id/month']"));
-			mes.sendKeys("Sep");
-			System.out.println(" **** ingresa el mes ************** OK");
-			//***************************************** Ingreso de día *****************************	
-			WebElement dia = Obj_Android_Driver.findElement(By.xpath("//*[@resource-id='android:id/day']"));
-			dia.sendKeys("25");
-			System.out.println(" **** Ingresa el día ************** OK");
-			//***************************************** Ingreso de año *****************************	
-			WebElement anio = Obj_Android_Driver.findElement(By.xpath("//*[@resource-id='android:id/year']"));
-			anio.sendKeys("2018");
-			System.out.println(" **** Ingresa el año ************** OK");
-						
-			System.out.println(" **** Ingresa la Fecha de la Meta ************** OK");
-			
-			Thread.sleep(2000);
-			Obj_Android_Driver.findElement(By.xpath("//*[@resource-id='android:id/button1' and @text='Set']")).click();
-	
-			// ******* click en el Chulito *****
-			
-			List<WebElement> list2= Obj_Android_Driver.findElements(By.xpath("//*/android.view.View/android.view.View/android.view.View/android.widget.Button"));
-			int Dbl_X_4 = list2.get(1).getLocation().getX();
-			System.out.println(Dbl_X_4);
-			int Dbl_Y_4 = list2.get(1).getLocation().getY();
-			System.out.println(Dbl_Y_4);
-			Obj_Android_Driver.tap(1, Dbl_X_4, Dbl_Y_4, 100);
-
-			System.out.println(" **** Creación de Meta - FIN ************** OK");
-
+	public void selector(String metodo) throws IOException{
+		switch (metodo) 
+		{ 			
+				case "pedirVinculado": flujos.pedirVinculado(Obj_Android_Driver,Str_Numero_Amigo);
+				break;
+				case "pagarVinculado": flujos.pagarVinculado("prueba2",Obj_Android_Driver);
+				break; 
+				case "enviarVinculado": flujos.enviarVinculado("MetaVacacionesTolu",Str_Contrasena,Str_Numero_Amigo,Obj_Android_Driver);
+				break; 
+				case "sacarVinculado": flujos.sacarVinculado("prueba2",Obj_Android_Driver);
+				break; 
+				case "creaBolsillo": flujos.creaBolsillo(Obj_Android_Driver,Str_Nombre_Bolsillo);	
+				break; 
+				case "crudBolsillo": flujos.crudBolsillo("editar",Obj_Android_Driver,Str_Nombre_Bolsillo,Str_Nombre2_Bolsillo);
+				break; 
+				case "crearMeta": flujos.crearMeta(Obj_Android_Driver,Str_Nombre_Meta);
+				break; 
+				case "crudMeta": flujos.crudMeta("romper",Obj_Android_Driver,Str_Nombre_Meta);
+				break; 
+				case "recargaCelular": flujos.recargaCelular("MetaVacacionesTolu",Obj_Android_Driver,Str_Numero_celrec);
+				break;
+				case "recargaDirecTVPrepago": flujos.recargaDirecTVPrepago("MetaVacacionesTolu",Obj_Android_Driver,Str_Numero_celrec);
+				break;
+				case "todo":
+					String[] metodos={"pedirVinculado","sacarVinculado","enviarVinculado"};
+					for(int i = 0; i<metodos.length; i++){
+						selector(metodos[i]);
+					}
+				break;
 		}
-		catch (Exception Obj_Error)
-		{
-			System.out.println(" ****  Creación de Meta ************** FAIL");
-			funciones.toma_Evidencias(Obj_Android_Driver);
-		}	
-	}
+	}	
 	
-	public static void editaMeta() throws InterruptedException{
-		Thread.sleep(4000);
-		List<WebElement> list= Obj_Android_Driver.findElements(By.xpath("//*[contains(@content-desc,'+')]"));
-		//System.out.println("tammm: "+list.size());
-		list.get(1).click();
-		Thread.sleep(2000);
-		List<WebElement> list1= Obj_Android_Driver.findElements(By.xpath("//*[contains(@content-desc,'+')]"));
-		list1.get(1).click();
-		for(int i = 0;i<4;i++){
-			Thread.sleep(1000);
-			list.get(1).click();
-		}
-		List<WebElement> list3= Obj_Android_Driver.findElements(By.xpath("//*/android.view.View/android.view.View/android.view.View/android.widget.Button"));
-		int Dbl_X = list3.get(1).getLocation().getX();
-		System.out.println(Dbl_X);
-		int Dbl_Y = list3.get(1).getLocation().getY();
-		System.out.println(Dbl_Y);
-		Obj_Android_Driver.tap(1, Dbl_X+50, Dbl_Y+50, 100);
-		
-		
-	}
-	
-	public static void completaMeta() throws InterruptedException{
-		Thread.sleep(4000);
-		String saldoMeta=funciones.opSelMeta(Str_Nombre_Meta,Obj_Android_Driver);
-		String recarga =funciones.opRecarga(Str_Nombre_Meta,Obj_Android_Driver);
-		List<WebElement> list= Obj_Android_Driver.findElements(By.xpath("//*[contains(@content-desc,'+')]"));
-		while(!saldoMeta.equals(recarga)){
-			
-			list.get(0).click();
-			recarga =funciones.opRecarga(Str_Nombre_Meta,Obj_Android_Driver);
-			System.out.println("saldo "+saldoMeta);
-			System.out.println("recarga "+recarga);
-		}
-		System.out.println("saldo "+saldoMeta);
-		System.out.println("recarga "+recarga);
-		
-		List<WebElement> list3= Obj_Android_Driver.findElements(By.xpath("//*/android.view.View/android.view.View/android.view.View/android.widget.Button"));
-		int Dbl_X = list3.get(1).getLocation().getX();
-		System.out.println(Dbl_X);
-		int Dbl_Y = list3.get(1).getLocation().getY();
-		System.out.println(Dbl_Y);
-		Obj_Android_Driver.tap(1, Dbl_X+50, Dbl_Y+50, 100);
-		
-	}
-	
-	public static void rompeMeta(){
-		
-	}
 
 	//*************************************** FLUJOS DEL GUARDADITO *********************
 	
